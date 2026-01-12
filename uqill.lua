@@ -449,6 +449,13 @@ local Waypoints = {
     ["Underground Cellar"]     = Vector3.new(2135, -91, -700),
     ["Christmas Cave"]     = Vector3.new(715, -487, 8910),
 }
+local WaypointsTNT = {
+    ["TNT 1"]  = Vector3.new(3347, 14, 3442),
+    ["TNT 2"]  = Vector3.new(3439, 10, 3560),
+    ["TNT 3"]  = Vector3.new(3144, 5, 3790),
+    ["TNT 4"]  = Vector3.new(3392, 13, 3632),
+    ["Door TNT"] = Vector3.new(3405, 10, 3350),
+}
 
 local function TeleportTo(targetPos)
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
@@ -707,7 +714,7 @@ local function startFishingSuperInstantLoop()
         lightSpawn(function()
             _Charge:InvokeServer()
         end)
-        -- task.wait(0.01)
+        task.wait(0.01)
         lightSpawn(function()
             _Request:InvokeServer(unpack(args))
         end)
@@ -715,6 +722,7 @@ local function startFishingSuperInstantLoop()
         pcall(function() _Complete:FireServer() end)
         task.wait(delayReset) 
         pcall(function() _Cancel:InvokeServer() end)
+        task.wait(0.01)
     end
 end
 
@@ -722,8 +730,8 @@ local function resetCharacter()
     local _Complete = CompleteGame
     local _Cancel = CancelInput
     pcall(function() _Complete:FireServer() end)
-    task.wait(0.05) 
-    pcall(function() _Cancel:InvokeServer() end)
+    -- task.wait(0.05) 
+    -- pcall(function() _Cancel:InvokeServer() end)
 end
 
 -- =====================================================
@@ -2192,7 +2200,7 @@ end
 
 local Window = WindUI:CreateWindow({ Title = "UQiLL", Icon = "chess-king", Author = "by UQi", Transparent = true })
 Window.Name = GUI_NAMES.Main 
-Window:Tag({ Title = "v.4.6.0", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
+Window:Tag({ Title = "v.4.7.0", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
 Window:SetToggleKey(Enum.KeyCode.H)
 Window:EditOpenButton({
     Enabled = false,
@@ -2581,19 +2589,57 @@ TabWeather:Toggle({ Title = "Smart Monitor", Desc = "Checks every 15s", Icon = "
 
 -- [[ TAB 4: TELEPORT ]]
 local sectionEventLimited = TabTeleport:Section({ Title = "Auto Event Limited", Openen = false })
-local TimedLabel = sectionEventLimited:Paragraph({
-    Title = "Christmas Time",
-    Desc = "Status: Off"
+-- local TimedLabel = sectionEventLimited:Paragraph({
+--     Title = "Christmas Time",
+--     Desc = "Status: Off"
+-- })
+
+-- sectionEventLimited:Toggle({
+--     Title = "Auto Christmas Time",
+--     Icon = "clock",
+--     Value = false,
+--     Callback = function(state)
+--         ToggleAutoTimedEvent(state, TimedLabel)
+--     end
+-- })
+
+sectionEventLimited:Button({
+	Title = "TNT 1",
+	Icon = "tnt",
+	Callback = function()
+		TeleportTo(WaypointsTNT["TNT 1"])
+	end
+})
+sectionEventLimited:Button({
+	Title = "TNT 2",
+	Icon = "tnt",
+	Callback = function()
+		TeleportTo(WaypointsTNT["TNT 2"])
+	end
+})
+sectionEventLimited:Button({
+	Title = "TNT 3",
+	Icon = "tnt",
+	Callback = function()
+		TeleportTo(WaypointsTNT["TNT 3"])
+	end
+})
+sectionEventLimited:Button({
+	Title = "TNT 4",
+	Icon = "tnt",
+	Callback = function()
+		TeleportTo(WaypointsTNT["TNT 4"])
+	end
 })
 
-sectionEventLimited:Toggle({
-    Title = "Auto Christmas Time",
-    Icon = "clock",
-    Value = false,
-    Callback = function(state)
-        ToggleAutoTimedEvent(state, TimedLabel)
-    end
+sectionEventLimited:Button({
+	Title = "Doors Pirate Cove",
+	Icon = "door",
+	Callback = function()
+		TeleportTo(WaypointsTNT["Door TNT"])
+	end
 })
+
 
 local sectionEAutoEvent = TabTeleport:Section({ Title = "Auto Event", Openen = false})
 
