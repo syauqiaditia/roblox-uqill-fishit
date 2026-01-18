@@ -429,25 +429,28 @@ end
 local Waypoints = {
     ["Fisherman Island"]    = Vector3.new(-33, 10, 2770),
     ["Traveling Merchant"]  = Vector3.new(-135, 2, 2764),
-    ["Kohana"]              = Vector3.new(-626, 16, 588),
-    ["Kohana Lava"]         = Vector3.new(-594, 59, 112),
+    ["Kohana"]              = CFrame.new(-604, 2, 546) * CFrame.Angles(0, math.rad(90), 0),
+    ["Kohana Lava"]         = CFrame.new(-592, 59, 127) * CFrame.Angles(0, math.rad(75), 0),
     ["Esoteric Island"]     = Vector3.new(1991, 6, 1390),
-    ["Esoteric Depths"]     = Vector3.new(3240, -1302, 1404),
-    ["Tropical Grove"]      = Vector3.new(-2132, 53, 3630),
+    ["Esoteric Depths"]     = CFrame.new(3243, -1302, 1404) * CFrame.Angles(0, math.rad(160), 0),
+    ["Tropical Grove"]      = CFrame.new(-2136, 53, 3631) * CFrame.Angles(0, math.rad(120), 0),
     ["Coral Reef"]          = Vector3.new(-3138, 4, 2132),
     ["Weather Machine"]     = Vector3.new(-1517, 3, 1910),
-    ["Sisyphus Statue"]     = Vector3.new(-3657, -134, -963),
-    ["Treasure Room"]       = Vector3.new(-3604, -284, -1632),
-    ["Ancient Jungle"]      = Vector3.new(1463, 8, -358),
+    ["Sisyphus Statue"]     = CFrame.new(-3657, -134, -963) * CFrame.Angles(0, math.rad(100), 0),
+    ["Treasure Room"]       = Vector3.new(-3599, -276, -1641),
+    ["Ancient Jungle"]      = CFrame.new(1483, 11, -302) * CFrame.Angles(0, math.rad(0), 0),
     ["Ancient Ruin"]        = Vector3.new(6067, -586, 4714),
-    ["Sacred Temple"]       = Vector3.new(1476, -22, -632),
-    ["Classic Island"]      = Vector3.new(1433, 44, 2755),
-    ["Iron Cavern"]         = Vector3.new(-8798, -585, 241),
-    ["Iron Cafe"]           = Vector3.new(-8647, -548, 160),
-    ["Crater Island"]       = Vector3.new(1070, 2, 5102),
-    ["Cristmas Island"]     = Vector3.new(1175, 24, 1558),
+    ["Sacred Temple"]       = Vector3.new(1498, -22, -640),
+    -- ["Classic Island"]      = Vector3.new(1433, 44, 2755),
+    -- ["Iron Cavern"]         = Vector3.new(-8798, -585, 241),
+    -- ["Iron Cafe"]           = Vector3.new(-8647, -548, 160),
+    ["Crater Island"]       = CFrame.new(1015, 15, 5097) * CFrame.Angles(0, math.rad(140), 0),
+    -- ["Cristmas Island"]     = Vector3.new(1175, 24, 1558),
     ["Underground Cellar"]     = Vector3.new(2135, -91, -700),
-    ["Christmas Cave"]     = Vector3.new(715, -487, 8910),
+    -- ["Christmas Cave"]     = Vector3.new(715, -487, 8910),
+    ["Pirate Treasure Room"] = Vector3.new(3305, -306, 3080),
+    ["Leviatan's Den "] = Vector3.new(3497, -255, 3533),
+    ["Pirate Cove"] = CFrame.new(3471, 4, 3442) * CFrame.Angles(0, math.rad(140), 0)
 }
 local WaypointsTNT = {
     ["TNT 1"]  = Vector3.new(3347, 14, 3442),
@@ -457,11 +460,37 @@ local WaypointsTNT = {
     ["Door TNT"] = Vector3.new(3405, 10, 3350),
 }
 
+local WaypointsTreasurePirate = {
+    ["Deadman Compass"] = Vector3.new(-3434.199951171875, -25.47418975830078, -1503.10009765625),
+    ["Letters 1"]  = Vector3.new(3490, 109, 3424),
+    ["Letters 2"]  = Vector3.new(3521, 29, 3247),
+    ["Letters 3"]  = Vector3.new(3614, 10, 3310),
+    ["Letters 4"]  = Vector3.new(3453, 14, 3380),
+    ["Letters 5"]  = Vector3.new(3164, 42, 3403),
+    ["Quest"] = Vector3.new(3302, -298, 3000),
+}
+local WaypointsTreeasureCove = {
+    ["Relic 1"]  = Vector3.new(3490, 109, 3424),
+    ["Relic 2 2"]  = Vector3.new(3521, 29, 3247),
+    ["Relic 3"]  = Vector3.new(3614, 10, 3310),
+    ["Door"] = Vector3.new(3302, -298, 3000),
+}
+
 local function TeleportTo(targetPos)
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
         local HRP = LocalPlayer.Character.HumanoidRootPart
-        HRP.AssemblyLinearVelocity = Vector3.new(0,0,0) 
-        HRP.CFrame = CFrame.new(targetPos + Vector3.new(0, 3, 0))
+        HRP.AssemblyLinearVelocity = Vector3.new(0,0,0)
+        
+        -- Kita buat variable offset untuk tinggi (supaya tidak nyangkut di tanah)
+        local heightOffset = Vector3.new(0, 3, 0)
+
+        if typeof(targetPos) == "Vector3" then
+            -- Jika data cuma Vector3, buat CFrame baru (rotasi default 0)
+            HRP.CFrame = CFrame.new(targetPos + heightOffset)
+        elseif typeof(targetPos) == "CFrame" then
+            -- Jika data sudah CFrame (ada rotasinya), pakai langsung + tingginya
+            HRP.CFrame = targetPos + heightOffset
+        end
     end
 end
 
@@ -2200,7 +2229,7 @@ end
 
 local Window = WindUI:CreateWindow({ Title = "UQiLL", Icon = "chess-king", Author = "by UQi", Transparent = true })
 Window.Name = GUI_NAMES.Main 
-Window:Tag({ Title = "v.4.7.0", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
+Window:Tag({ Title = "v.4.8.0", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
 Window:SetToggleKey(Enum.KeyCode.H)
 Window:EditOpenButton({
     Enabled = false,
@@ -2347,6 +2376,12 @@ local TabFavorite = Window:Tab({ Title = "Auto Favorite", Icon = "star" })
 local TabSell = Window:Tab({ Title = "Auto Sell", Icon = "shopping-bag" })
 local TabWeather = Window:Tab({ Title = "Weather", Icon = "cloud-lightning" })
 local TabTeleport = Window:Tab({ Title = "Teleport", Icon = "map-pin" })
+local TabQuest = Window:Tab({
+    Title = "Quest",
+    Icon = "mail-warning",
+    Opened = false,
+})
+
 local TabWebHook = Window:Tab({ Title = "Webhook", Icon = "webhook" })
 local TabSettings = Window:Tab({ Title = "Settings", Icon = "settings" })
 
@@ -2588,7 +2623,7 @@ TabWeather:Dropdown({ Title = "Select Weather(s)", Desc = "Choose multiple weath
 TabWeather:Toggle({ Title = "Smart Monitor", Desc = "Checks every 15s", Icon = "cloud-lightning", Value = false, Callback = function(state) SettingsState.AutoWeather.Active = state; if state then StartAutoWeather(); WindUI:Notify({Title = "Weather", Content = "Monitor Started", Duration = 2}) else StopAutoWeather() WindUI:Notify({Title = "Weather", Content = "Monitor Stopped", Duration = 2}) end end })
 
 -- [[ TAB 4: TELEPORT ]]
-local sectionEventLimited = TabTeleport:Section({ Title = "Auto Event Limited", Openen = false })
+-- local sectionEventLimited = TabTeleport:Section({ Title = "Auto Event Limited", Openen = false})
 -- local TimedLabel = sectionEventLimited:Paragraph({
 --     Title = "Christmas Time",
 --     Desc = "Status: Off"
@@ -2603,28 +2638,30 @@ local sectionEventLimited = TabTeleport:Section({ Title = "Auto Event Limited", 
 --     end
 -- })
 
-sectionEventLimited:Button({
+local doorsQuest = TabQuest:Section({ Title = "Pirate Cove Doors", Openen = false })
+
+doorsQuest:Button({
 	Title = "TNT 1",
 	Icon = "tnt",
 	Callback = function()
 		TeleportTo(WaypointsTNT["TNT 1"])
 	end
 })
-sectionEventLimited:Button({
+doorsQuest:Button({
 	Title = "TNT 2",
 	Icon = "tnt",
 	Callback = function()
 		TeleportTo(WaypointsTNT["TNT 2"])
 	end
 })
-sectionEventLimited:Button({
+doorsQuest:Button({
 	Title = "TNT 3",
 	Icon = "tnt",
 	Callback = function()
 		TeleportTo(WaypointsTNT["TNT 3"])
 	end
 })
-sectionEventLimited:Button({
+doorsQuest:Button({
 	Title = "TNT 4",
 	Icon = "tnt",
 	Callback = function()
@@ -2632,13 +2669,74 @@ sectionEventLimited:Button({
 	end
 })
 
-sectionEventLimited:Button({
+doorsQuest:Button({
 	Title = "Doors Pirate Cove",
 	Icon = "door",
 	Callback = function()
 		TeleportTo(WaypointsTNT["Door TNT"])
 	end
 })
+
+-- local treasureQuest = sectionEventLimited:Section({ Title = "Hidden Letter Quest", Openen = false })
+
+local TreasureQuest = TabQuest:Section ({
+	Title = "Pirate Treasure Room Quest",
+})
+
+TreasureQuest:Button({
+	Title = "Deadman's Compass",
+	Icon = "archive",
+	Callback = function()
+		TeleportTo(WaypointsTreasurePirate["Deadman Compass"])
+	end
+})
+TreasureQuest:Button({
+	Title = "Letters 1",
+	Icon = "archive",
+	Callback = function()
+		TeleportTo(WaypointsTreasurePirate["Letters 1"])
+	end
+})
+TreasureQuest:Button({
+	Title = "Letters 2",
+	Icon = "archive",
+	Callback = function()
+		TeleportTo(WaypointsTreasurePirate["Letters 2"])
+	end
+})
+TreasureQuest:Button({
+	Title = "Letters 3",
+	Icon = "archive",
+	Callback = function()
+		TeleportTo(WaypointsTreasurePirate["Letters 3"])
+	end
+})
+TreasureQuest:Button({
+	Title = "Letters 4",
+	Icon = "archive",
+	Callback = function()
+		TeleportTo(WaypointsTreasurePirate["Letters 4"])
+	end
+})
+TreasureQuest:Button({
+	Title = "Letters 5",
+	Icon = "archive",
+	Callback = function()
+		TeleportTo(WaypointsTreasurePirate["Letters 5"])
+	end
+})
+TreasureQuest:Button({
+	Title = "Pirate Quest",
+	Icon = "skull",
+	Callback = function()
+		TeleportTo(WaypointsTreasurePirate["Quest"])
+	end
+})
+
+-- local LeviatanQuest = TabQuest:Section ({
+-- 	Title = "Leviatan Doors",
+-- })
+
 
 
 local sectionEAutoEvent = TabTeleport:Section({ Title = "Auto Event", Openen = false})
@@ -2696,14 +2794,14 @@ sectionEAutoEvent:Button({
 
 
 local sectionTPIsland = TabTeleport:Section({ Title = "Islands" }) 
-local TP_Dropdown = sectionTPIsland:Dropdown({ Title = "Select Island", Values = zoneNames, Value = zoneNames[1] or "Select", Callback = function(val) selectedZone = val end })
+local TP_Dropdown = sectionTPIsland:Dropdown({ Title = "Select Island", SearchBarEnabled = true, Values = zoneNames, Value = zoneNames[1] or "Select", Callback = function(val) selectedZone = val end })
 sectionTPIsland:Button({ Title = "Teleport to Island", Icon = "navigation", Callback = function() if selectedZone and Waypoints[selectedZone] then TeleportTo(Waypoints[selectedZone]) else WindUI:Notify({Title = "Error", Content = "Coordinates missing", Duration = 2}) end end })
 sectionTPIsland:Button({ Title = "Refresh List", Icon = "refresh-cw", Callback = function() WindUI:Notify({Title = "System", Content = "Static list reloaded", Duration = 1}) end })
 
 local sectionTPPlayer = TabTeleport:Section({ Title = "Player Teleport" })
 local targetPlayerName = ""
 local playerNames = GetPlayerList()
-local PlayerDropdown = sectionTPPlayer:Dropdown({ Title = "Select Player", Values = playerNames, Value = playerNames[1] or "None", Callback = function(val) targetPlayerName = val end })
+local PlayerDropdown = sectionTPPlayer:Dropdown({ Title = "Select Player", SearchBarEnabled = true, Values = playerNames, Value = playerNames[1] or "None", Callback = function(val) targetPlayerName = val end })
 sectionTPPlayer:Button({ Title = "Teleport to Player", Icon = "user", Callback = function() local target = FindPlayer(targetPlayerName); if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then TeleportTo(target.Character.HumanoidRootPart.Position + Vector3.new(3, 0, 0)); WindUI:Notify({Title = "Teleport", Content = "Warped to " .. target.Name, Duration = 2}) else WindUI:Notify({Title = "Error", Content = "Player not found!", Duration = 2}) end end })
 sectionTPPlayer:Button({ Title = "Refresh Players", Desc = "Update list", Icon = "refresh-cw", Callback = function() local newPlayers = GetPlayerList(); PlayerDropdown:Refresh(newPlayers, newPlayers[1] or "None"); WindUI:Notify({Title = "System", Content = "List updated!", Duration = 2}) end })
 
@@ -2761,6 +2859,9 @@ sectionServer:Button({
 })
 
 local sectionOptimization = TabSettings:Section({Title = "Optimization"})
+local EventAssets = ReplicatedStorage:WaitForChild("Controllers"):WaitForChild("EventController"):WaitForChild("Assets")
+local WeatherTargets = {"Fog", "Radiant", "Rain", "Snow"}
+
 sectionOptimization:Button(
     {Title = "Anti-AFK", Desc = "Status: Active (Always On)", Icon = "clock", Callback = function()
             WindUI:Notify({Title = "Anti-AFK", Content = "Permanently Active", Duration = 2})
@@ -2769,7 +2870,6 @@ sectionOptimization:Button(
 sectionOptimization:Button(
     {
         Title = "Destroy Fish Popup",
-        Desc = "Permanently removes 'Small Notification' UI",
         Icon = "trash-2",
         Callback = function()
             if SettingsState.PopupDestroyed then
@@ -2783,7 +2883,7 @@ sectionOptimization:Button(
     }
 )
 sectionOptimization:Toggle(
-    {Title = "FPS Boost (Potato)", Desc = "Low Graphics", Icon = "monitor", Value = false, Callback = function(state)
+    {Title = "FPS Boost (Potato)", Icon = "monitor", Value = false, Callback = function(state)
             ToggleFPSBoost(state)
         end}
 )
@@ -2804,8 +2904,47 @@ sectionOptimization:Toggle({
 })
 
 sectionOptimization:Toggle({
+    Title = "Weather Visuals",
+    Icon = "sun", 
+    Value = true, -- Default ON (Visual Nyala)
+    Callback = function(state)
+        
+        -- Fungsi kecil untuk memproses folder (biar kodingan rapi)
+        local function ProcessFolder(parentFolder)
+            if not parentFolder then return end
+            
+            for _, name in ipairs(WeatherTargets) do
+                -- Cari folder target (misal: "Snow") di dalam parent (Workspace atau Assets)
+                local target = parentFolder:FindFirstChild(name)
+                
+                if target then
+                    -- Matikan semua 'Enabled' di anak cucunya
+                    for _, obj in ipairs(target:GetDescendants()) do
+                        pcall(function()
+                            obj.Enabled = state
+                        end)
+                    end
+                end
+            end
+        end
+
+        -- 1. Proses yang ada di Workspace (Cuaca yang sedang tampil)
+        ProcessFolder(Workspace)
+
+        -- 2. Proses yang ada di ReplicatedStorage (Sumber aset)
+        ProcessFolder(EventAssets)
+
+        -- Notifikasi
+        if state then
+            WindUI:Notify({Title = "Visual", Content = "All Weather Restored", Duration = 2})
+        else
+            WindUI:Notify({Title = "Visual", Content = "All Weather Disabled (Clean)", Duration = 2})
+        end
+    end
+})
+
+sectionOptimization:Toggle({
     Title = "No 3D Rendering",
-    Desc = "Disable world rendering (extreme FPS boost)",
     Icon = "eye-off",
     Value = false,
     Callback = function(state)
