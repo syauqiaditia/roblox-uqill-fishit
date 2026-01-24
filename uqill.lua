@@ -449,8 +449,10 @@ local Waypoints = {
     ["Underground Cellar"]     = Vector3.new(2135, -91, -700),
     -- ["Christmas Cave"]     = Vector3.new(715, -487, 8910),
     ["Pirate Treasure Room"] = Vector3.new(3305, -306, 3080),
-    ["Leviatan's Den "] = Vector3.new(3497, -255, 3533),
-    ["Pirate Cove"] = CFrame.new(3471, 4, 3442) * CFrame.Angles(0, math.rad(140), 0)
+    ["Leviatan's Den "] =  CFrame.new(3473, -288, 3473) * CFrame.Angles(0, math.rad(200), 0),
+    ["Pirate Cove"] = CFrame.new(3471, 4, 3442) * CFrame.Angles(0, math.rad(140), 0),
+    ["Leviatan Doors"] = CFrame.new(3448, -288, 3407),
+    ["Crystal Depths"] = CFrame.new(5746, -877, 15376) * CFrame.Angles(0, math.rad(20), 0)
 }
 local WaypointsTNT = {
     ["TNT 1"]  = Vector3.new(3347, 14, 3442),
@@ -2229,7 +2231,7 @@ end
 
 local Window = WindUI:CreateWindow({ Title = "UQiLL", Icon = "chess-king", Author = "by UQi", Transparent = true })
 Window.Name = GUI_NAMES.Main 
-Window:Tag({ Title = "v.4.8.0", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
+Window:Tag({ Title = "v.4.8.1", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
 Window:SetToggleKey(Enum.KeyCode.H)
 Window:EditOpenButton({
     Enabled = false,
