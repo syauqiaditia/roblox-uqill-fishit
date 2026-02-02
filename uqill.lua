@@ -58,6 +58,7 @@ getgenv().fishingStart = false
 local legit = false
 local instant = false
 local superInstant = true 
+local blatant = true 
 
 local args = {-1.233, 1, workspace:GetServerTimeNow()}
 local delayTime = 0.56   
@@ -104,7 +105,6 @@ local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
-local RunService = game:GetService("RunService")
 
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -722,7 +722,6 @@ local function startFishingLoop()
 end
 
 local function startFishingSuperInstantLoop()
-    warn("LOOPING FAST")
     local _Charge = ChargeRod
     local _Request = RequestGame
     local _Complete = CompleteGame
@@ -748,6 +747,35 @@ local function startFishingSuperInstantLoop()
         task.wait(0.01)
         pcall(function() _Cancel:FireServer() end)
        task.wait(delayReset) 
+    end
+end
+
+local function startFishingBlatantLoop()
+    local _Charge = ChargeRod
+    local _Request = RequestGame
+    local _Complete = CompleteGame
+    local _Cancel = CancelInput
+    if FishingBlocker.AutoGreat then
+        local state = {
+            true
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_net@0.2.0"):WaitForChild("net"):WaitForChild("RF/UpdateAutoFishingState"):InvokeServer(unpack(state))
+    end
+    pcall(function() _Cancel:InvokeServer() end)
+    task.wait(0.055)
+    while getgenv().fishingStart do
+        lightSpawn(function()
+            _Charge:InvokeServer()
+        end)
+        task.wait(0.01)
+        lightSpawn(function()
+            _Request:InvokeServer(unpack(args))
+        end)
+        task.wait(delayCharge) 
+        pcall(function() _Complete:FireServer() end)
+        task.wait(delayReset) 
+        pcall(function() _Cancel:InvokeServer() end)
+        task.wait(0.01)
     end
 end
 
@@ -2225,7 +2253,7 @@ end
 
 local Window = WindUI:CreateWindow({ Title = "UQiLL", Icon = "chess-king", Author = "by UQi", Transparent = true })
 Window.Name = GUI_NAMES.Main 
-Window:Tag({ Title = "v.4.10.0", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
+Window:Tag({ Title = "v.4.11.0", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
 Window:SetToggleKey(Enum.KeyCode.H)
 Window:EditOpenButton({
     Enabled = false,
@@ -2438,16 +2466,16 @@ TabFishing:Dropdown(
     {
         Title = "Category Fishing",
         Desc = "Select Mode",
-        Values = {"Instant", "Blatan"},
+        Values = {"Instant", "Super Instant", "Blatan"},
         Value = "Instant",
         Callback = function(option)
-            instant, superInstant = (option == "Instant"), (option == "Blatan")
+            instant, superInstant, blatant = (option == "Instant"), (option == "Super Instant"), (option == "Blatan")
             setElementVisible("Delay Fishing", false)
             setElementVisible("Delay Catch", false)
             setElementVisible("Reset Delay", false)
             if instant then
                 setElementVisible("Delay Catch", true)
-            elseif superInstant then
+            elseif superInstant or blatant then
                 setElementVisible("Delay Fishing", true)
                 setElementVisible("Reset Delay", true)
             end
@@ -2545,7 +2573,9 @@ TabFishing:Toggle(
                 )
                 if superInstant then
                     task.spawn(startFishingSuperInstantLoop)
-                else
+                else if blatant then
+                    task.spawn(startFishingBlatantLoop)
+                end
                     task.spawn(startFishingLoop)
                 end
                 WindUI:Notify({Title = "Fishing", Content = "Started!", Duration = 2})
