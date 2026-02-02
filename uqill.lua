@@ -745,9 +745,9 @@ local function startFishingSuperInstantLoop()
         end)
         task.wait(delayCharge) 
         pcall(function() _Complete:FireServer() end)
-        task.wait(delayReset) 
-        pcall(function() _Cancel:InvokeServer() end)
         task.wait(0.01)
+        pcall(function() _Cancel:FireServer() end)
+       task.wait(delayReset) 
     end
 end
 
