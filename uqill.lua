@@ -59,7 +59,7 @@ local legit = false
 local instant = false
 local superInstant = true 
 
-local args = { -1.115296483039856, 0, 1763651451.636425 }
+local args = {-1.233, 1, workspace:GetServerTimeNow()}
 local delayTime = 0.56   
 local delayCharge = 1.15 
 local delayReset = 0.2 
@@ -705,25 +705,19 @@ end
 
 
 local function startFishingLoop()
-    local _Cancel = CancelInput
-    local _Complete = CompleteGame
     local _Charge = ChargeRod
-     if FishingBlocker.AutoGreat then
-        local state = {
-            true
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_net@0.2.0"):WaitForChild("net"):WaitForChild("RF/UpdateAutoFishingState"):InvokeServer(unpack(state))
-    end
+    local _Request = RequestGame
+    local _Complete = CompleteGame
+    local _Cancel = CancelInput
     while getgenv().fishingStart do
-        pcall(function() _Charge:InvokeServer() end) 
-        task.wait(0.055)
-        if not getgenv().fishingStart then break end
-        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_net@0.2.0"):WaitForChild("net"):WaitForChild("RF/RequestFishingMinigameStarted"):InvokeServer(unpack(args))
+        pcall(function() _Charge:InvokeServer() end)
+        task.wait(0.01)
+        pcall(function() _Request:InvokeServer(unpack(args)) end)
         task.wait(delayTime)
-        if not getgenv().fishingStart then break end 
         pcall(function() _Complete:FireServer() end)
-        task.wait(0.05)
-        pcall(function() _Cancel:InvokeServer() end)
+        task.wait(0.01)
+        pcall(function() _Cancel:FireServer() end)
+        task.wait(1)
     end
 end
 
@@ -2231,7 +2225,7 @@ end
 
 local Window = WindUI:CreateWindow({ Title = "UQiLL", Icon = "chess-king", Author = "by UQi", Transparent = true })
 Window.Name = GUI_NAMES.Main 
-Window:Tag({ Title = "v.4.8.1", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
+Window:Tag({ Title = "v.4.9.0", Icon = "github", Color = Color3.fromHex("#30ff6a"), Radius = 0 })
 Window:SetToggleKey(Enum.KeyCode.H)
 Window:EditOpenButton({
     Enabled = false,
